@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=320, initial-scale=1">
+<script type="text/javascript" src="brython.js"></script>
+<script type="text/javascript" src="brython_stdlib.js"></script>
+</head>
+
+<body onload="brython(1)">
+
+<input id="s1" style="width: 100%; max-width: 640px; margin: 2px;"><br>
+<input id="s2" style="width: 100%; max-width: 640px; margin: 2px;"><br>
+<input id="s3" style="width: 100%; max-width: 640px; margin: 2px;"><br>
+<button id="echo" style="width: 100%; max-width: 640px; margin: 2px;">OK</button><br>
+<input id="s4" style="width: 100%; max-width: 640px; margin: 2px;">
+
+<script type="text/python">
+from browser import window
+from browser import document
+
+def string_sum(l, s):
+     i = map(ord, l+s)
+     return int(sum(i)*ord(min(l))*ord(min(s))/ord(max(l))/ord(max(s)))
+
+
+def number(_i):
+   m = 2**31-1
+   a = 48271
+   c = 0
+   _i = (a * _i + c) % m
+   return _i
+
+
+def get_string(string_1, string_2, string_3, string_len=20):
+     try:
+         h = string_sum(string_1, string_2)
+         string_base = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+         _i = h+int(string_3)
+         result = ""
+         for _ in range(string_len):
+             _i = number(_i)
+             result += string_base[_i % len(string_base)]
+         return result
+     except Exception as e:
+         return str(e)
+
+def click(ev):
+    document['s4'].value = get_string(document['s1'].value, document['s2'].value, document['s3'].value) 
+    window.navigator.clipboard.writeText(document['s4'].value)    
+
+document["echo"].bind("click", click)
+
+</script>
+</body>
+
+</html>
